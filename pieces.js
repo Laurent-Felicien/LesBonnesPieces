@@ -1,10 +1,21 @@
-import { ajoutListenerEnvoyerAvis, ajoutListenersAvis } from "./avis.js";
+import { afficherAvis, ajoutListenerEnvoyerAvis, ajoutListenersAvis } from "./avis.js";
 
-// Récupération des pièces depuis le fichier JSON
-const reponse = await fetch('http://localhost:8081/pieces/');
-const pieces = await reponse.json();
+//Récupération des pièces eventuellement stockées dans le localStorage
+let pieces = window.localStorage.getItem('pieces');
+if (pieces === null) {
+    // Récupération des pièces depuis l'API
+    const reponse = await fetch('http://localhost:8081/pieces/');
+    pieces = await reponse.json();
+    // Transformation des pièces en JSON
+    const valeurPieces = JSON.stringify(pieces);
+    // Stockage des informations dans le localStorage
+    window.localStorage.setItem("pieces", valeurPieces);
+} else {
+    pieces = JSON.parse(pieces);
+}
+
 // on appel la fonction pour ajouter le listener au formulaire
-ajoutListenerEnvoyerAvis()
+ajoutListenerEnvoyerAvis();
 
 function genererPieces(pieces) {
     for (let i = 0; i < pieces.length; i++) {
@@ -49,6 +60,17 @@ function genererPieces(pieces) {
 
 genererPieces(pieces);
 
+for (let i = 0; i < pieces.length; i++) {
+    const id = pieces[i].id;
+    const avisJSON = window.localStorage.getItem(`avis-piece-${id}`);
+    const avis = JSON.parse(avisJSON);
+
+    if (avis !== null) {
+        const pieceElement = document.querySelector(`article button[data-id="${id}"]`);
+        // Appel de la fonction afficherAvis pour afficher les avis
+        afficherAvis(pieceElement, avis);
+    }
+}
 //gestion des boutons 
 const boutonTrier = document.querySelector(".btn-trier");
 
@@ -148,3 +170,9 @@ inputPrixMax.addEventListener('input', function () {
     document.querySelector(".fiches").innerHTML = "";
     genererPieces(piecesFiltrees);
 })
+
+//rajoutons un event listener à la fin du fichier pieces.js, sur le bouton “Mettre à jour les pièces”, et nous appelons la fonction removeItem dans la fonction anonyme :
+const boutonMaj = document.querySelector(".btn-maj");
+boutonMaj.addEventListener("click", () => {
+    window.localStorage.removeItem("pieces");
+});
