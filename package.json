@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenClassrooms-Student-Center/7697016-Front-End.1.git"
+    "url": "git+https://github.com/Laurent-Felicien/LesBonnesPieces.git"
   },
   "author": "OpenClassrooms",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/OpenClassrooms-Student-Center/7697016-Front-End.1/issues"
+    "url": "https://github.com/Laurent-Felicien/LesBonnesPieces/issues"
   },
-  "homepage": "https://github.com/OpenClassrooms-Student-Center/7697016-Front-End.1#readme",
+  "homepage": "https://github.com/Laurent-Felicien/LesBonnesPieces#readme",
   "dependencies": {
     "http-server": "^14.1.1"
   }
