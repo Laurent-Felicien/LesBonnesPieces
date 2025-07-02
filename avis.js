@@ -26,8 +26,30 @@ export function ajoutListenersAvis() {
 
     }
 
-    
+}
 
-    
+//Creation de la fonction pour permettre aux utilisateurs de donner leur avis
+export async function ajoutListenerEnvoyerAvis() {
+     const formulaireAvis = document.querySelector(".formulaire-avis");
+     formulaireAvis.addEventListener("submit", (event)=> {
+        //// Désactivation du comportement par défaut du navigateur
+        event.preventDefault()
 
+        // Création de l’objet du nouvel avis.
+            const avis = {
+        pieceId: parseInt(event.target.querySelector("[name=piece-id]").value),
+        utilisateur: event.target.querySelector("[name=utilisateur").value,
+        commentaire: event.target.querySelector("[name=commentaire]").value,
+            }
+        // On transforme l'objet avis en texte (format JSON) pour pouvoir l'envoyer avec la requête
+        const chargeUtile = JSON.stringify(avis);
+
+        // On envoie la requête POST à l'API
+        fetch("http://localhost:8081/avis", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: chargeUtile
+});
+
+     })
 }
