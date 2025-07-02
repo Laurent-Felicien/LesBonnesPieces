@@ -1,8 +1,10 @@
 import { ajoutListenersAvis } from "./avis.js";
 
-// Récupération des pièces depuis le fichier JSON
-const reponse = await fetch('pieces-autos.json');
+// Récupération des pièces depuis l'API
+const reponse = await fetch("http://localhost:8081/pieces");
+//Déserialisation de la réponse
 const pieces = await reponse.json();
+
 
 function genererPieces(pieces){
     for (let i = 0; i < pieces.length; i++) {
