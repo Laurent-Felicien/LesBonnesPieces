@@ -1,7 +1,7 @@
 {
-  "name": "7697016-front-end.1",
+  "name": "bonnespieces",
   "version": "1.0.0",
-  "description": "Support de Code pour le cours OpenClassrooms Creez des pages web dynamiques avec javascript",
+  "description": "Site pour apprendre à créer des pages web dynamiques avec javascript",
   "main": "pieces.js",
   "scripts": {
     "start":"http-server",
