@@ -1,4 +1,4 @@
-import { afficherAvis, ajoutListenerEnvoyerAvis, ajoutListenersAvis } from "./avis.js";
+import { afficherAvis, ajoutListenerEnvoyerAvis, ajoutListenersAvis , afficherGraphiqueAvis} from "./avis.js";
 
 //Récupération des pièces eventuellement stockées dans le localStorage
 let pieces = window.localStorage.getItem('pieces');
@@ -171,8 +171,12 @@ inputPrixMax.addEventListener('input', function () {
     genererPieces(piecesFiltrees);
 })
 
-//rajoutons un event listener à la fin du fichier pieces.js, sur le bouton “Mettre à jour les pièces”, et nous appelons la fonction removeItem dans la fonction anonyme :
+//rajoutons un event listener à la fin du fichier pieces.js, 
+// sur le bouton “Mettre à jour les pièces”, 
+// et nous appelons la fonction removeItem dans la fonction anonyme :
 const boutonMaj = document.querySelector(".btn-maj");
 boutonMaj.addEventListener("click", () => {
     window.localStorage.removeItem("pieces");
 });
+
+await afficherGraphiqueAvis();

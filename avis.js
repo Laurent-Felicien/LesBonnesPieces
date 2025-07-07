@@ -57,3 +57,84 @@ export function ajoutListenerEnvoyerAvis() {
     });
 
 }
+
+export async function afficherGraphiqueAvis() {
+    // Calcul du nombre total d'avis par quantité d'étoiles attribuées
+    const avis = await fetch("http://localhost:8081/avis").then(avis => avis.json());
+    //Ce tableau représente le nombre de commentaires pour chaque nombre d’étoiles, de 1 à 5
+    const nb_commentaires = [0, 0, 0, 0, 0];
+    for (let commentaire of avis) {
+        //Pour chaque commentaire, on regarde combien d’étoiles il a (commentaire.nbEtoiles)
+        //On soustrait 1 pour trouver l’indice correct dans le tableau (car les indices commencent à 0).
+        //On incrémente (++) le compteur correspondant dans nb_commentaires.
+        nb_commentaires[commentaire.nbEtoiles - 1]++;
+    }
+
+    // Légende qui s'affichera sur la gauche à côté de la barre horizontale
+    const labels = ["5", "4", "3", "2", "1"];
+    // Données et personnalisation du graphique
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: "Étoiles attribuées",
+            data: nb_commentaires.reverse(),
+            backgroundColor: "rgba(255, 230, 0, 1)", // couleur jaune
+        }],
+    };
+    // Objet de configuration final
+    const config = {
+        type: "bar",
+        data: data,
+        options: {
+            indexAxis: "y",
+        },
+    };
+    // Rendu du graphique dans l'élément canvas
+    const graphiqueAvis = new Chart(
+        document.getElementById("graphique-avis"),
+        config,
+    );
+
+
+    //Rajoutez un deuxième graphique sur votre site web. 
+    // Ce graphique devra afficher deux barres verticales représentant 
+    // chacune la quantité de commentaires déposés sur : 
+    // les pièces disponibles 
+    // les pièces non disponibles.
+    const piecesJSON = window.localStorage.getItem("pieces");
+    const pieces = JSON.parse(piecesJSON);
+    let nbCommentairesdispo = 0
+    let nbCommentairesindispo = 0
+
+    for (let i = 0; i < avis.length; i++) {
+        const piece = pieces.find(piece => piece.id === avis[i].pieceId);
+        if (piece) {
+            if (piece.disponibilite) {
+                nbCommentairesdispo++;
+            } else {
+                nbCommentairesindispo++;
+            }
+        }
+    }
+
+    // Légende qui s'affichera sur la gauche à côté de la barre verticale
+    const labelsCommentaires = ["Disponibles", "Indisponibles"];
+    // Données et personnalisation du graphique
+    const dataCommentaires = {
+        labels: labelsCommentaires,
+        datasets: [{
+            label: "Nombre de commentaires",
+            data: [nbCommentairesdispo, nbCommentairesindispo],
+            backgroundColor: ["rgba(0, 255, 0, 1)", "rgba(255, 0, 0, 1)"], // vert pour disponibles, rouge pour indisponibles
+        }],
+    };
+    const configCommentaires = {
+        type: "bar",
+        data: dataCommentaires,
+    };
+    // Rendu du graphique dans l'élément canvas
+    const graphiqueCommentaires = new Chart(
+        document.getElementById("graphique-commentaires"),
+        configCommentaires,
+    );
+}
