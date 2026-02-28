@@ -3,78 +3,114 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Les Bonnes Pièces</title>
+  <meta name="description" content="Les Bonnes Pièces — Catalogue de pièces automobiles de qualité">
+  <title>Les Bonnes Pièces — Catalogue Auto</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- ========== HEADER ========== -->
   <header>
     <div class="header-inner">
       <div class="logo-zone">
-        <div class="logo-icon">🔧</div>
+        <div class="logo-emblem">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/>
+          </svg>
+        </div>
         <div>
           <div class="logo-title">Les Bonnes Pièces</div>
-          <div class="logo-sub">Pièces auto de qualité</div>
+          <div class="logo-sub">Catalogue automobile</div>
         </div>
       </div>
-      <div class="header-stats">
-        <div class="stat"><span id="stat-total">0</span><small>pièces</small></div>
-        <div class="stat"><span id="stat-dispo">0</span><small>en stock</small></div>
-        <div class="stat"><span id="stat-abordable">0</span><small>≤ 35€</small></div>
-      </div>
+      <nav class="header-nav">
+        <a href="#catalogue">Catalogue</a>
+        <a href="#footer">Contact</a>
+        <span class="nav-version">v2.0.0</span>
+      </nav>
     </div>
   </header>
 
-  <div class="layout">
+  <!-- ========== HERO ========== -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">🔩 Pièces certifiées qualité</div>
+      <h1 class="hero-title">Trouvez la pièce<br><span>qu'il vous faut</span></h1>
+      <p class="hero-desc">Un catalogue de pièces automobiles fiables, avec avis clients et disponibilité en temps réel.</p>
+      <div class="hero-stats">
+        <div class="hstat"><span id="stat-total">0</span><small>Pièces</small></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span id="stat-dispo">0</span><small>En stock</small></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span id="stat-abordable">0</span><small>Sous 35 €</small></div>
+      </div>
+    </div>
+    <div class="hero-decor" aria-hidden="true">
+      <div class="decor-circle c1"></div>
+      <div class="decor-circle c2"></div>
+      <div class="decor-circle c3"></div>
+    </div>
+  </section>
+
+  <!-- ========== CATALOGUE ========== -->
+  <div class="catalogue-wrapper" id="catalogue">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
 
       <div class="sidebar-block">
-        <div class="sidebar-title">🔍 Recherche</div>
-        <input type="text" id="search" placeholder="Nom d'une pièce..." class="input-search">
+        <label class="sidebar-label">🔍 Rechercher</label>
+        <div class="input-icon-wrap">
+          <input type="text" id="search" placeholder="Nom d'une pièce..." class="input-field">
+        </div>
       </div>
 
       <div class="sidebar-block">
-        <div class="sidebar-title">💰 Prix max : <span id="prix-label">60€</span></div>
+        <label class="sidebar-label">💰 Prix maximum : <strong id="prix-label">60 €</strong></label>
         <input type="range" id="prix-max" min="0" max="60" step="1" value="60" class="slider">
+        <div class="slider-bounds"><span>0 €</span><span>60 €</span></div>
       </div>
 
       <div class="sidebar-block">
-        <div class="sidebar-title">📂 Catégorie</div>
+        <label class="sidebar-label">📂 Catégorie</label>
         <div id="categories" class="categories-list"></div>
       </div>
 
       <div class="sidebar-block">
-        <div class="sidebar-title">⚙️ Trier par</div>
-        <div class="btn-group">
-          <button class="btn-filter active" data-sort="default">Par défaut</button>
-          <button class="btn-filter" data-sort="asc">Prix ↑</button>
-          <button class="btn-filter" data-sort="desc">Prix ↓</button>
+        <label class="sidebar-label">↕ Trier par prix</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" data-sort="default">Défaut</button>
+          <button class="toggle-btn" data-sort="asc">Croissant ↑</button>
+          <button class="toggle-btn" data-sort="desc">Décroissant ↓</button>
         </div>
       </div>
 
       <div class="sidebar-block">
-        <div class="sidebar-title">🎯 Filtres rapides</div>
-        <div class="btn-group">
-          <button class="btn-filter" data-filter="abordable">≤ 35€</button>
-          <button class="btn-filter" data-filter="dispo">En stock</button>
-          <button class="btn-filter" data-filter="desc-only">Avec description</button>
+        <label class="sidebar-label">⚡ Filtres rapides</label>
+        <div class="quick-filters">
+          <button class="qfilter-btn" data-filter="abordable">
+            <span class="qf-icon">💚</span> Abordable (≤ 35€)
+          </button>
+          <button class="qfilter-btn" data-filter="dispo">
+            <span class="qf-icon">✅</span> En stock
+          </button>
+          <button class="qfilter-btn" data-filter="desc-only">
+            <span class="qf-icon">📝</span> Avec description
+          </button>
         </div>
       </div>
 
       <div class="sidebar-block">
-        <div class="sidebar-title">💬 Laisser un avis</div>
-        <form class="formulaire-avis" id="form-avis">
+        <label class="sidebar-label">💬 Laisser un avis</label>
+        <form id="form-avis">
           <input type="number" name="piece-id" placeholder="ID de la pièce" class="input-field" min="1">
           <input type="text" name="utilisateur" placeholder="Votre nom" class="input-field">
           <textarea name="commentaire" placeholder="Votre avis..." class="input-field" rows="3"></textarea>
-          <div class="stars-input">
-            <span>Note :</span>
-            <div class="stars" id="stars-picker">
+          <div class="stars-row">
+            <span class="stars-label">Note</span>
+            <div id="stars-picker" class="stars-picker">
               <span data-val="1">★</span>
               <span data-val="2">★</span>
               <span data-val="3">★</span>
@@ -83,41 +119,74 @@
             </div>
             <input type="hidden" name="nbEtoiles" id="nbEtoiles" value="0">
           </div>
-          <button type="submit" class="btn-submit">Envoyer l'avis</button>
+          <button type="submit" class="btn-submit">Envoyer →</button>
         </form>
         <div id="form-message" class="form-message"></div>
       </div>
 
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main>
+    <!-- MAIN -->
+    <main class="catalogue-main">
       <div class="results-bar">
         <span id="results-count">Chargement...</span>
-        <button class="btn-reset" id="btn-reset">Réinitialiser les filtres</button>
+        <button class="btn-reset" id="btn-reset">↺ Réinitialiser</button>
       </div>
-
       <div class="fiches" id="fiches"></div>
-
       <div id="empty-state" class="empty-state" style="display:none">
-        <div>😕</div>
+        <div class="empty-icon">🔍</div>
         <p>Aucune pièce ne correspond à vos critères.</p>
-        <button class="btn-submit" onclick="resetAll()">Réinitialiser</button>
+        <button class="btn-submit" onclick="resetAll()" style="width:auto;padding:10px 24px">Réinitialiser les filtres</button>
       </div>
     </main>
 
   </div>
 
-  <!-- MODAL AVIS -->
+  <!-- ========== MODAL ========== -->
   <div class="modal-overlay" id="modal-overlay" onclick="fermerModal()">
     <div class="modal" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <div id="modal-title">Avis</div>
+        <div id="modal-title">Avis clients</div>
         <button class="modal-close" onclick="fermerModal()">✕</button>
       </div>
       <div class="modal-body" id="modal-body"></div>
     </div>
   </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer id="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo">Les Bonnes Pièces</div>
+        <p class="footer-tagline">Votre catalogue de pièces auto de confiance.</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Contact</div>
+          <a href="mailto:Laurentfelicien62@gmail.com" class="footer-link">
+            ✉️ Laurentfelicien62@gmail.com
+          </a>
+          <a href="https://linkedin.com/in/laurent-irié" target="_blank" rel="noopener" class="footer-link">
+            💼 linkedin.com/in/laurent-irié
+          </a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Légal</div>
+          <p class="footer-legal-text">
+            © <span id="annee"></span> Les Bonnes Pièces.<br>
+            Tous droits réservés.<br>
+            Contenu protégé — reproduction interdite<br>sans autorisation écrite.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span class="annee2"></span> Les Bonnes Pièces — Tous droits réservés</span>
+      <span class="footer-version">v2.0.0</span>
+    </div>
+  </footer>
 
   <script src="pieces.js"></script>
 </body>

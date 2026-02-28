@@ -1,67 +1,64 @@
 // ============================================================
-// pieces.js — Les Bonnes Pièces (version sans back-end)
-// Les données viennent du fichier JSON local.
-// Les avis sont sauvegardés dans le localStorage du navigateur.
+// pieces.js — Les Bonnes Pièces v2.0.0
+// Données embarquées, avis en localStorage, sans back-end
 // ============================================================
 
-// --- DONNÉES ---
-// On définit les pièces directement ici (données du fichier pieces-autos.json)
-// comme ça le site fonctionne sans serveur.
 const PIECES_DATA = [
   {
-    "id": 1,
-    "nom": "Ampoule LED",
-    "prix": 60,
-    "categorie": "Optiques",
-    "image": "images/ampoule-led.png",
-    "emoji": "💡",
-    "description": "Distance d'éclairage : 100 mètres !",
-    "disponibilite": true
+    id: 1,
+    nom: "Ampoule LED",
+    prix: 60,
+    categorie: "Optiques",
+    image: "images/ampoule-led.png",
+    emoji: "💡",
+    description: "Distance d'éclairage : 100 mètres. Longue durée de vie garantie.",
+    disponibilite: true
   },
   {
-    "id": 2,
-    "nom": "Plaquettes de frein (x4)",
-    "prix": 40,
-    "categorie": "Freinage",
-    "image": "images/plaquettes-frein.png",
-    "emoji": "🛑",
-    "description": "Une qualité de freinage optimale, par tous les temps.",
-    "disponibilite": true
+    id: 2,
+    nom: "Plaquettes de frein (x4)",
+    prix: 40,
+    categorie: "Freinage",
+    image: "images/plaquettes-frein.png",
+    emoji: "🛑",
+    description: "Qualité de freinage optimale par tous les temps.",
+    disponibilite: true
   },
   {
-    "id": 3,
-    "nom": "Ampoule boîte à gants",
-    "prix": 5.49,
-    "categorie": "Optiques",
-    "image": "images/ampoule-boite-a-gants.png",
-    "emoji": "🔆",
-    "description": "Pour y voir clair dans l'habitacle.",
-    "disponibilite": false
+    id: 3,
+    nom: "Ampoule boîte à gants",
+    prix: 5.49,
+    categorie: "Optiques",
+    image: "images/ampoule-boite-a-gants.png",
+    emoji: "🔆",
+    description: "Pour y voir clair dans l'habitacle.",
+    disponibilite: false
   },
   {
-    "id": 4,
-    "nom": "Liquide de frein",
-    "prix": 9.60,
-    "categorie": "Freinage",
-    "image": "images/liquide-frein.png",
-    "emoji": "🧴",
-    "description": "Liquide de frein haute performance, compatible tous véhicules.",
-    "disponibilite": true
+    id: 4,
+    nom: "Liquide de frein",
+    prix: 9.60,
+    categorie: "Freinage",
+    image: "images/liquide-frein.png",
+    emoji: "🧴",
+    description: "Haute performance, compatible tous véhicules.",
+    disponibilite: true
   },
   {
-    "id": 5,
-    "nom": "Balai d'essuie-glace",
-    "prix": 29.10,
-    "categorie": "Carrosserie",
-    "image": "images/balai-essuie-glace.png",
-    "emoji": "🌧️",
-    "description": "Performances d'essuyage au top ! Longueur : 550 mm.",
-    "disponibilite": true
+    id: 5,
+    nom: "Balai d'essuie-glace",
+    prix: 29.10,
+    categorie: "Carrosserie",
+    image: "images/balai-essuie-glace.png",
+    emoji: "🌧️",
+    description: "Performances d'essuyage optimales. Longueur : 550 mm.",
+    disponibilite: true
   }
 ];
 
-// --- ÉTAT DE L'APPLICATION ---
-// Cet objet contient tous les filtres actifs en ce moment.
+// ============================================================
+// ÉTAT — tous les filtres actifs
+// ============================================================
 let etat = {
   search: "",
   prixMax: 60,
@@ -70,122 +67,116 @@ let etat = {
   filter: null
 };
 
-// On stocke ici les avis de chaque pièce (clé = id de la pièce)
+// Avis par pièce (id → tableau d'avis)
 let avisMap = {};
 
 // ============================================================
-// INITIALISATION — s'exécute quand la page est chargée
+// INIT
 // ============================================================
 function init() {
-  chargerAvisDepuisLocalStorage();
+  chargerAvis();
   mettreAJourStats();
   genererCategories();
   afficherPieces();
   ajouterEcouteurs();
+  initFormulaire();
+  mettreAJourAnnee();
 }
 
 // ============================================================
-// AVIS — chargement depuis le localStorage
+// ANNÉE DYNAMIQUE dans le footer
 // ============================================================
-function chargerAvisDepuisLocalStorage() {
-  // Pour chaque pièce, on regarde si des avis sont sauvegardés
+function mettreAJourAnnee() {
+  const annee = new Date().getFullYear();
+  // On met l'année dans tous les éléments qui l'affichent
+  document.getElementById("annee")?.textContent = annee;
+  document.querySelectorAll(".annee2").forEach(el => el.textContent = annee);
+}
+
+// ============================================================
+// AVIS — localStorage
+// ============================================================
+function chargerAvis() {
   for (const piece of PIECES_DATA) {
-    const cle = `avis-piece-${piece.id}`;
-    const avisJSON = localStorage.getItem(cle);
-    if (avisJSON) {
-      avisMap[piece.id] = JSON.parse(avisJSON);
-    } else {
-      avisMap[piece.id] = [];
-    }
+    const json = localStorage.getItem(`avis-piece-${piece.id}`);
+    avisMap[piece.id] = json ? JSON.parse(json) : [];
   }
 }
 
-// ============================================================
-// STATS — les chiffres dans le header
-// ============================================================
-function mettreAJourStats() {
-  const total = PIECES_DATA.length;
-  const dispo = PIECES_DATA.filter(p => p.disponibilite).length;
-  const abordable = PIECES_DATA.filter(p => p.prix <= 35).length;
-
-  document.getElementById("stat-total").textContent = total;
-  document.getElementById("stat-dispo").textContent = dispo;
-  document.getElementById("stat-abordable").textContent = abordable;
+function sauvegarderAvis(pieceId) {
+  localStorage.setItem(`avis-piece-${pieceId}`, JSON.stringify(avisMap[pieceId]));
 }
 
 // ============================================================
-// CATÉGORIES — boutons dans la sidebar
+// STATS header
+// ============================================================
+function mettreAJourStats() {
+  document.getElementById("stat-total").textContent = PIECES_DATA.length;
+  document.getElementById("stat-dispo").textContent = PIECES_DATA.filter(p => p.disponibilite).length;
+  document.getElementById("stat-abordable").textContent = PIECES_DATA.filter(p => p.prix <= 35).length;
+}
+
+// ============================================================
+// CATÉGORIES sidebar
 // ============================================================
 function genererCategories() {
-  // On récupère toutes les catégories uniques
   const categories = [...new Set(PIECES_DATA.map(p => p.categorie).filter(Boolean))];
   const container = document.getElementById("categories");
 
   // Bouton "Toutes"
-  const btnToutes = document.createElement("button");
-  btnToutes.className = "cat-btn active";
-  btnToutes.textContent = "Toutes";
-  btnToutes.dataset.cat = "";
+  const btnToutes = creerBoutonCategorie("Toutes", "", true);
   container.appendChild(btnToutes);
 
-  // Un bouton par catégorie
   for (const cat of categories) {
-    const btn = document.createElement("button");
-    btn.className = "cat-btn";
-    btn.textContent = cat;
-    btn.dataset.cat = cat;
-    container.appendChild(btn);
+    container.appendChild(creerBoutonCategorie(cat, cat, false));
   }
 
-  // Écouteur sur le container (on utilise la délégation d'événements)
-  container.addEventListener("click", function(e) {
+  // Délégation d'événement sur le container
+  container.addEventListener("click", (e) => {
     const btn = e.target.closest(".cat-btn");
     if (!btn) return;
 
-    // On retire "active" de tous les boutons
     container.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-
-    // On met à jour l'état
     etat.categorie = btn.dataset.cat || null;
     afficherPieces();
   });
 }
 
+function creerBoutonCategorie(label, valeur, actif) {
+  const btn = document.createElement("button");
+  btn.className = `cat-btn${actif ? " active" : ""}`;
+  btn.textContent = label;
+  btn.dataset.cat = valeur;
+  return btn;
+}
+
 // ============================================================
-// FILTRAGE & TRI — retourne les pièces filtrées
+// FILTRAGE
 // ============================================================
 function getPiecesFiltrees() {
   let pieces = [...PIECES_DATA];
 
-  // Filtre par recherche texte
   if (etat.search) {
     const terme = etat.search.toLowerCase();
     pieces = pieces.filter(p => p.nom.toLowerCase().includes(terme));
   }
 
-  // Filtre par prix maximum
   pieces = pieces.filter(p => p.prix <= etat.prixMax);
 
-  // Filtre par catégorie
-  if (etat.categorie) {
-    pieces = pieces.filter(p => p.categorie === etat.categorie);
-  }
-
-  // Filtres rapides
+  if (etat.categorie) pieces = pieces.filter(p => p.categorie === etat.categorie);
   if (etat.filter === "abordable") pieces = pieces.filter(p => p.prix <= 35);
   if (etat.filter === "dispo") pieces = pieces.filter(p => p.disponibilite);
   if (etat.filter === "desc-only") pieces = pieces.filter(p => p.description);
 
-  // Tri
-  if (etat.sort === "asc") pieces.sort((a, b) => a.prix - b.prix);
+  if (etat.sort === "asc")  pieces.sort((a, b) => a.prix - b.prix);
   if (etat.sort === "desc") pieces.sort((a, b) => b.prix - a.prix);
 
   return pieces;
 }
 
 // ============================================================
-// AFFICHAGE DES PIÈCES — génère les cartes HTML
+// AFFICHAGE DES PIÈCES
 // ============================================================
 function afficherPieces() {
   const pieces = getPiecesFiltrees();
@@ -193,34 +184,31 @@ function afficherPieces() {
   const emptyState = document.getElementById("empty-state");
   const resultsCount = document.getElementById("results-count");
 
-  // Vider le container
   container.innerHTML = "";
 
-  // Mettre à jour le compteur de résultats
-  resultsCount.textContent = `${pieces.length} pièce${pieces.length > 1 ? "s" : ""} trouvée${pieces.length > 1 ? "s" : ""}`;
+  const n = pieces.length;
+  resultsCount.textContent = `${n} pièce${n > 1 ? "s" : ""} trouvée${n > 1 ? "s" : ""}`;
 
-  if (pieces.length === 0) {
+  if (n === 0) {
     emptyState.style.display = "block";
     return;
   }
 
   emptyState.style.display = "none";
 
-  // Générer une carte pour chaque pièce
   for (const piece of pieces) {
-    const card = creerCarteHTML(piece);
-    container.appendChild(card);
+    container.appendChild(creerCarte(piece));
   }
 }
 
 // ============================================================
-// CRÉATION D'UNE CARTE — retourne un élément DOM
+// CARTE
 // ============================================================
-function creerCarteHTML(piece) {
+function creerCarte(piece) {
   const card = document.createElement("article");
-  card.className = "card";
+  // Classe dispo/rupture pour la ligne de couleur en haut
+  card.className = `card ${piece.disponibilite ? "dispo" : "rupture"}`;
 
-  // Nombre d'avis pour cette pièce
   const nbAvis = avisMap[piece.id]?.length ?? 0;
   const estAbordable = piece.prix <= 35;
 
@@ -229,180 +217,154 @@ function creerCarteHTML(piece) {
       <img
         src="${piece.image}"
         alt="${piece.nom}"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+        loading="lazy"
       >
-      <div class="card-img-fallback" style="display:none">${piece.emoji || "🔩"}</div>
-      <span class="badge-stock ${piece.disponibilite ? 'ok' : 'no'}">
+      <div class="card-img-fallback">${piece.emoji || "🔩"}</div>
+      <span class="badge-stock ${piece.disponibilite ? "ok" : "no"}">
         ${piece.disponibilite ? "En stock" : "Rupture"}
       </span>
     </div>
     <div class="card-body">
       <div class="card-cat">${piece.categorie || "Non catégorisé"}</div>
       <div class="card-nom">${piece.nom}</div>
-      <div class="card-desc">${piece.description || "Pas de description."}</div>
+      <div class="card-desc">${piece.description || "Aucune description."}</div>
     </div>
     <div class="card-footer">
-      <div class="card-prix ${estAbordable ? 'abordable' : 'cher'}">${piece.prix.toFixed(2)} €</div>
+      <div class="card-prix ${estAbordable ? "abordable" : "normal"}">
+        ${piece.prix.toFixed(2)} €
+      </div>
       <button class="btn-avis" data-id="${piece.id}">
         💬 ${nbAvis > 0 ? `${nbAvis} avis` : "Avis"}
       </button>
     </div>
   `;
 
-  // Écouteur sur le bouton "Avis"
-  card.querySelector(".btn-avis").addEventListener("click", () => {
-    ouvrirModal(piece);
-  });
-
+  card.querySelector(".btn-avis").addEventListener("click", () => ouvrirModal(piece));
   return card;
 }
 
 // ============================================================
-// MODAL AVIS — afficher les avis d'une pièce
+// MODAL AVIS
 // ============================================================
 function ouvrirModal(piece) {
-  const overlay = document.getElementById("modal-overlay");
-  const modalTitle = document.getElementById("modal-title");
-  const modalBody = document.getElementById("modal-body");
-
-  modalTitle.textContent = `Avis — ${piece.nom}`;
-
+  document.getElementById("modal-title").textContent = `Avis — ${piece.nom}`;
+  const body = document.getElementById("modal-body");
   const avis = avisMap[piece.id] || [];
 
   if (avis.length === 0) {
-    modalBody.innerHTML = `<div class="no-avis">Aucun avis pour le moment.<br>Soyez le premier à en laisser un !</div>`;
+    body.innerHTML = `<div class="no-avis">Aucun avis pour cette pièce.<br>Utilisez le formulaire pour être le premier !</div>`;
   } else {
-    modalBody.innerHTML = avis.map(a => `
+    body.innerHTML = avis.map(a => `
       <div class="avis-item">
         <div class="avis-user">
-          <span>${a.utilisateur}</span>
+          <span>${escapeHTML(a.utilisateur)}</span>
           <span class="avis-stars">${"★".repeat(a.nbEtoiles)}${"☆".repeat(5 - a.nbEtoiles)}</span>
         </div>
-        <div class="avis-comment">${a.commentaire}</div>
+        <div class="avis-comment">${escapeHTML(a.commentaire)}</div>
       </div>
     `).join("");
   }
 
-  overlay.classList.add("open");
+  document.getElementById("modal-overlay").classList.add("open");
+}
+
+// Sécurité basique : éviter l'injection HTML dans les avis
+function escapeHTML(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 function fermerModal() {
   document.getElementById("modal-overlay").classList.remove("open");
 }
 
-// Fermer la modal avec Echap
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") fermerModal();
-});
+document.addEventListener("keydown", e => { if (e.key === "Escape") fermerModal(); });
 
 // ============================================================
-// FORMULAIRE AVIS — envoyer un avis
+// FORMULAIRE AVIS
 // ============================================================
 function initFormulaire() {
   const form = document.getElementById("form-avis");
   const message = document.getElementById("form-message");
-
-  // Gestion des étoiles (clic)
   const stars = document.querySelectorAll("#stars-picker span");
-  let noteSelectionnee = 0;
+  let note = 0;
 
-  stars.forEach((star, index) => {
-    // Au survol : colorer jusqu'à l'étoile survolée
+  // Gestion étoiles
+  stars.forEach((star, i) => {
     star.addEventListener("mouseenter", () => {
-      stars.forEach((s, i) => {
-        s.classList.toggle("hover", i <= index);
-      });
+      stars.forEach((s, j) => s.classList.toggle("hover", j <= i));
     });
-
-    // Quand la souris quitte : revenir à la note sélectionnée
     star.addEventListener("mouseleave", () => {
-      stars.forEach((s, i) => {
-        s.classList.remove("hover");
-        s.classList.toggle("active", i < noteSelectionnee);
-      });
+      stars.forEach((s, j) => { s.classList.remove("hover"); s.classList.toggle("active", j < note); });
     });
-
-    // Au clic : enregistrer la note
     star.addEventListener("click", () => {
-      noteSelectionnee = index + 1;
-      document.getElementById("nbEtoiles").value = noteSelectionnee;
-      stars.forEach((s, i) => s.classList.toggle("active", i < noteSelectionnee));
+      note = i + 1;
+      document.getElementById("nbEtoiles").value = note;
+      stars.forEach((s, j) => s.classList.toggle("active", j < note));
     });
   });
 
-  // Soumission du formulaire
-  form.addEventListener("submit", function(e) {
+  // Soumission
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const pieceId = parseInt(form.querySelector("[name=piece-id]").value);
+    const pieceId  = parseInt(form.querySelector("[name=piece-id]").value);
     const utilisateur = form.querySelector("[name=utilisateur]").value.trim();
     const commentaire = form.querySelector("[name=commentaire]").value.trim();
-    const nbEtoiles = parseInt(document.getElementById("nbEtoiles").value);
+    const nbEtoiles   = parseInt(document.getElementById("nbEtoiles").value);
 
-    // Validation simple
     if (!pieceId || !utilisateur || !commentaire || !nbEtoiles) {
-      message.textContent = "⚠️ Veuillez remplir tous les champs.";
-      message.className = "form-message error";
+      afficherMessage(message, "⚠️ Veuillez remplir tous les champs et noter la pièce.", "error");
       return;
     }
 
-    // Vérifier que la pièce existe
     const piece = PIECES_DATA.find(p => p.id === pieceId);
     if (!piece) {
-      message.textContent = "⚠️ Aucune pièce avec cet identifiant.";
-      message.className = "form-message error";
+      afficherMessage(message, "⚠️ Aucune pièce avec cet identifiant.", "error");
       return;
     }
 
-    // Créer l'objet avis
-    const nouvelAvis = { utilisateur, commentaire, nbEtoiles };
+    avisMap[pieceId].push({ utilisateur, commentaire, nbEtoiles });
+    sauvegarderAvis(pieceId);
 
-    // Sauvegarder dans le tableau en mémoire
-    if (!avisMap[pieceId]) avisMap[pieceId] = [];
-    avisMap[pieceId].push(nouvelAvis);
+    afficherMessage(message, `✅ Avis ajouté pour "${piece.nom}" !`, "success");
 
-    // Sauvegarder dans le localStorage pour persister entre les visites
-    localStorage.setItem(`avis-piece-${pieceId}`, JSON.stringify(avisMap[pieceId]));
-
-    // Message de succès
-    message.textContent = `✅ Avis ajouté pour "${piece.nom}" !`;
-    message.className = "form-message success";
-
-    // Réinitialiser le formulaire
     form.reset();
-    noteSelectionnee = 0;
-    stars.forEach(s => { s.classList.remove("active", "hover"); });
+    note = 0;
+    stars.forEach(s => s.classList.remove("active", "hover"));
     document.getElementById("nbEtoiles").value = 0;
 
-    // Rafraîchir l'affichage (les boutons avis montrent le bon nombre)
-    afficherPieces();
+    afficherPieces(); // met à jour le compteur d'avis sur la carte
 
-    // Effacer le message après 3 secondes
-    setTimeout(() => { message.textContent = ""; }, 3000);
+    setTimeout(() => { message.textContent = ""; message.className = "form-message"; }, 3000);
   });
 }
 
+function afficherMessage(el, texte, type) {
+  el.textContent = texte;
+  el.className = `form-message ${type}`;
+}
+
 // ============================================================
-// ÉCOUTEURS D'ÉVÉNEMENTS — tous les contrôles de la page
+// ÉCOUTEURS
 // ============================================================
 function ajouterEcouteurs() {
-  // Barre de recherche
-  document.getElementById("search").addEventListener("input", function() {
+  // Recherche
+  document.getElementById("search").addEventListener("input", function () {
     etat.search = this.value.trim();
     afficherPieces();
   });
 
-  // Slider prix max
-  const slider = document.getElementById("prix-max");
-  slider.addEventListener("input", function() {
+  // Slider prix
+  document.getElementById("prix-max").addEventListener("input", function () {
     etat.prixMax = parseInt(this.value);
-    document.getElementById("prix-label").textContent = `${this.value}€`;
+    document.getElementById("prix-label").textContent = `${this.value} €`;
     afficherPieces();
   });
 
-  // Boutons de tri
+  // Tri
   document.querySelectorAll("[data-sort]").forEach(btn => {
-    btn.addEventListener("click", function() {
+    btn.addEventListener("click", function () {
       document.querySelectorAll("[data-sort]").forEach(b => b.classList.remove("active"));
       this.classList.add("active");
       etat.sort = this.dataset.sort;
@@ -410,10 +372,9 @@ function ajouterEcouteurs() {
     });
   });
 
-  // Boutons de filtres rapides
+  // Filtres rapides (toggle)
   document.querySelectorAll("[data-filter]").forEach(btn => {
-    btn.addEventListener("click", function() {
-      // Si le filtre est déjà actif, on le désactive (toggle)
+    btn.addEventListener("click", function () {
       if (this.classList.contains("active")) {
         this.classList.remove("active");
         etat.filter = null;
@@ -426,22 +387,19 @@ function ajouterEcouteurs() {
     });
   });
 
-  // Bouton réinitialiser
+  // Reset
   document.getElementById("btn-reset").addEventListener("click", resetAll);
-
-  // Initialiser le formulaire d'avis
-  initFormulaire();
 }
 
 // ============================================================
-// RESET — remettre tous les filtres à zéro
+// RESET COMPLET
 // ============================================================
 function resetAll() {
   etat = { search: "", prixMax: 60, categorie: null, sort: "default", filter: null };
 
   document.getElementById("search").value = "";
   document.getElementById("prix-max").value = 60;
-  document.getElementById("prix-label").textContent = "60€";
+  document.getElementById("prix-label").textContent = "60 €";
 
   document.querySelectorAll("[data-sort]").forEach(b => b.classList.remove("active"));
   document.querySelector("[data-sort='default']").classList.add("active");
@@ -449,7 +407,7 @@ function resetAll() {
   document.querySelectorAll("[data-filter]").forEach(b => b.classList.remove("active"));
 
   document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-  document.querySelector(".cat-btn[data-cat='']").classList.add("active");
+  document.querySelector(".cat-btn[data-cat='']")?.classList.add("active");
 
   afficherPieces();
 }
