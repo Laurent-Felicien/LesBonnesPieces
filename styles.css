@@ -118,31 +118,7 @@ header {
   letter-spacing: 1px;
 }
 
-.header-nav {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.header-nav a {
-  color: var(--sidebar-muted);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: color var(--transition);
-}
-
-.header-nav a:hover { color: #f8fafc; }
-
-.nav-version {
-  font-size: 11px;
-  background: rgba(37, 99, 235, 0.2);
-  color: #93c5fd;
-  border: 1px solid rgba(37, 99, 235, 0.3);
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-weight: 500;
-}
+/* header-nav supprimé intentionnellement */
 
 /* ============================================================
    HERO
@@ -460,7 +436,40 @@ textarea.input-field {
   transform: scale(1.1);
 }
 
-/* Bouton submit */
+/* Label formulaire */
+.form-label {
+  display: block;
+  font-size: 11px;
+  color: var(--sidebar-muted);
+  margin-bottom: 4px;
+  margin-top: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-label:first-child { margin-top: 0; }
+
+/* Select */
+select.input-field {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+  cursor: pointer;
+}
+
+select.input-field option {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+/* Input fields — plus d'espacement entre eux */
+.input-field {
+  margin-bottom: 0; /* géré par form-label maintenant */
+}
 .btn-submit {
   width: 100%;
   background: var(--primary);

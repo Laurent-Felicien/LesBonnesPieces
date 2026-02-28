@@ -25,11 +25,7 @@
           <div class="logo-sub">Catalogue automobile</div>
         </div>
       </div>
-      <nav class="header-nav">
-        <a href="#catalogue">Catalogue</a>
-        <a href="#footer">Contact</a>
-        <span class="nav-version">v2.0.0</span>
-      </nav>
+      <!-- version subtile uniquement en bas -->
     </div>
   </header>
 
@@ -105,9 +101,18 @@
       <div class="sidebar-block">
         <label class="sidebar-label">💬 Laisser un avis</label>
         <form id="form-avis">
-          <input type="number" name="piece-id" placeholder="ID de la pièce" class="input-field" min="1">
-          <input type="text" name="utilisateur" placeholder="Votre nom" class="input-field">
-          <textarea name="commentaire" placeholder="Votre avis..." class="input-field" rows="3"></textarea>
+          <!-- L'utilisateur choisit la pièce dans une liste déroulante -->
+          <label class="form-label">Pièce concernée</label>
+          <select name="piece-id" id="select-piece" class="input-field">
+            <option value="">— Choisir une pièce —</option>
+          </select>
+
+          <label class="form-label">Votre nom</label>
+          <input type="text" name="utilisateur" placeholder="Ex: Jean D." class="input-field">
+
+          <label class="form-label">Votre avis</label>
+          <textarea name="commentaire" placeholder="Décrivez votre expérience..." class="input-field" rows="3"></textarea>
+
           <div class="stars-row">
             <span class="stars-label">Note</span>
             <div id="stars-picker" class="stars-picker">
@@ -188,6 +193,6 @@
     </div>
   </footer>
 
-  <script src="pieces.js"></script>
+  <script src="pieces.js" defer></script>
 </body>
 </html>
