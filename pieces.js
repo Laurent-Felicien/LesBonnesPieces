@@ -147,7 +147,7 @@ function remplirSelectPieces() {
     const option = document.createElement("option");
     option.value = piece.id;
     // On affiche "Nom — prix €" pour que l'utilisateur identifie bien la pièce
-    option.textContent = `${piece.nom} — ${piece.prix.toFixed(2)} €`;
+    option.textContent = piece.nom;
     select.appendChild(option);
   }
 }
