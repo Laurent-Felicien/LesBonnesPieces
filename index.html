@@ -1,65 +1,124 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-	<meta charset="utf-8">
-	<title>Les Bonnes Pièces</title>
-	<link rel="stylesheet" href="styles.css">
-	<script src="node_modules/chart.js/dist/chart.umd.js" defer></script>
-	<script type="module" src="pieces.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Les Bonnes Pièces</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-	<header>
-		<img src="images/logo-les-bonnes-pieces.png" alt="LOGO">
-		<h1>Les Bonnes Pièces</h1>
-	</header>
-	<main>
-		<!-- Menu de recherche -->
-		<section class="filtres">
-			<h3>Filtres</h3>
-			<button class="btn-trier">Trier par prix croissant</button>
-			<br>
-			<button class="btn-filtrer">Filtrer les pièces non abordables</button>
-			<br>
-			<button class="btn-decroissant">Trier par prix décroissant</button>
-			<br>
-			<button class="btn-nodesc">Filtrer les pièces sans description</button>
-			<br>
-			<p>Prix maximum:</p>
-			<input type="range" name="prix-max" id="prix-max" min="0" max="60" step="5">
-			<!-- code a ajouter -->
-			<h3>Ajouter un avis</h3>
-			<form class="formulaire-avis">
-				Identifiant de la pièce :<br>
-				<input type="number" name="piece-id"><br>
-				Nom d'utilisateur :<br>
-				<input type="text" name="utilisateur"><br>
-				Avis :<br>
-				<input type="text" name="commentaire"><br>
-				Note:<br>
-				<input type="number" name="nbEtoiles" min="0" max="5"><br>
-				<button>Envoyer</button>
-			</form>
-			<h3>Données</h3>
-			<button class="btn-maj">Mettre à jour les pièces</button>
-			<h3>Aperçu des avis</h3>
-			<canvas id="graphique-avis" width="300" height="300"></canvas>
-			<h3>Aperçu des commentaires</h3>
-			<canvas id="graphique-commentaires" width="300" height="300"></canvas>
-		</section>
 
-		<!-- Fiches produits -->
-		<section class="fiches">
-			<!-- Code ajouté -->
-			<div class="abordables">
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="logo-zone">
+        <div class="logo-icon">🔧</div>
+        <div>
+          <div class="logo-title">Les Bonnes Pièces</div>
+          <div class="logo-sub">Pièces auto de qualité</div>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat"><span id="stat-total">0</span><small>pièces</small></div>
+        <div class="stat"><span id="stat-dispo">0</span><small>en stock</small></div>
+        <div class="stat"><span id="stat-abordable">0</span><small>≤ 35€</small></div>
+      </div>
+    </div>
+  </header>
 
-			</div>
-			<div class="disponibles">
+  <div class="layout">
 
-			</div>
-		</section>
-	</main>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="sidebar-block">
+        <div class="sidebar-title">🔍 Recherche</div>
+        <input type="text" id="search" placeholder="Nom d'une pièce..." class="input-search">
+      </div>
+
+      <div class="sidebar-block">
+        <div class="sidebar-title">💰 Prix max : <span id="prix-label">60€</span></div>
+        <input type="range" id="prix-max" min="0" max="60" step="1" value="60" class="slider">
+      </div>
+
+      <div class="sidebar-block">
+        <div class="sidebar-title">📂 Catégorie</div>
+        <div id="categories" class="categories-list"></div>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="sidebar-title">⚙️ Trier par</div>
+        <div class="btn-group">
+          <button class="btn-filter active" data-sort="default">Par défaut</button>
+          <button class="btn-filter" data-sort="asc">Prix ↑</button>
+          <button class="btn-filter" data-sort="desc">Prix ↓</button>
+        </div>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="sidebar-title">🎯 Filtres rapides</div>
+        <div class="btn-group">
+          <button class="btn-filter" data-filter="abordable">≤ 35€</button>
+          <button class="btn-filter" data-filter="dispo">En stock</button>
+          <button class="btn-filter" data-filter="desc-only">Avec description</button>
+        </div>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="sidebar-title">💬 Laisser un avis</div>
+        <form class="formulaire-avis" id="form-avis">
+          <input type="number" name="piece-id" placeholder="ID de la pièce" class="input-field" min="1">
+          <input type="text" name="utilisateur" placeholder="Votre nom" class="input-field">
+          <textarea name="commentaire" placeholder="Votre avis..." class="input-field" rows="3"></textarea>
+          <div class="stars-input">
+            <span>Note :</span>
+            <div class="stars" id="stars-picker">
+              <span data-val="1">★</span>
+              <span data-val="2">★</span>
+              <span data-val="3">★</span>
+              <span data-val="4">★</span>
+              <span data-val="5">★</span>
+            </div>
+            <input type="hidden" name="nbEtoiles" id="nbEtoiles" value="0">
+          </div>
+          <button type="submit" class="btn-submit">Envoyer l'avis</button>
+        </form>
+        <div id="form-message" class="form-message"></div>
+      </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main>
+      <div class="results-bar">
+        <span id="results-count">Chargement...</span>
+        <button class="btn-reset" id="btn-reset">Réinitialiser les filtres</button>
+      </div>
+
+      <div class="fiches" id="fiches"></div>
+
+      <div id="empty-state" class="empty-state" style="display:none">
+        <div>😕</div>
+        <p>Aucune pièce ne correspond à vos critères.</p>
+        <button class="btn-submit" onclick="resetAll()">Réinitialiser</button>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- MODAL AVIS -->
+  <div class="modal-overlay" id="modal-overlay" onclick="fermerModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div id="modal-title">Avis</div>
+        <button class="modal-close" onclick="fermerModal()">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="pieces.js"></script>
 </body>
-
 </html>
