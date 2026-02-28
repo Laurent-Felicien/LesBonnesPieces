@@ -28,7 +28,7 @@ const PIECES_DATA = [
     nom: "Ampoule LED",
     prix: 60,
     categorie: "Optiques",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&q=80",
+    image: "images/Ampoule-LED.png",
     emoji: "💡",
     description: "Distance d'éclairage : 100 mètres. Longue durée de vie garantie.",
     disponibilite: true
@@ -38,7 +38,7 @@ const PIECES_DATA = [
     nom: "Plaquettes de frein (x4)",
     prix: 40,
     categorie: "Freinage",
-    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=300&q=80",
+    image: "images/Plaquettes-de-frein(x4).jpg",
     emoji: "🛑",
     description: "Qualité de freinage optimale par tous les temps.",
     disponibilite: true
@@ -48,7 +48,7 @@ const PIECES_DATA = [
     nom: "Ampoule boîte à gants",
     prix: 5.49,
     categorie: "Optiques",
-    image: "https://images.unsplash.com/photo-1580974852861-c381510bc98a?w=300&q=80",
+    image: "images/ampoule-boite-gants.jpg",
     emoji: "🔆",
     description: "Pour y voir clair dans l'habitacle.",
     disponibilite: false
@@ -58,7 +58,7 @@ const PIECES_DATA = [
     nom: "Liquide de frein",
     prix: 9.60,
     categorie: "Freinage",
-    image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=300&q=80",
+    image: "images/Liquide-de-frein.webp",
     emoji: "🧴",
     description: "Haute performance, compatible tous véhicules.",
     disponibilite: true
@@ -68,7 +68,7 @@ const PIECES_DATA = [
     nom: "Balai d'essuie-glace",
     prix: 29.10,
     categorie: "Carrosserie",
-    image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&q=80",
+    image: "images/Balai-dessuie-glace.jpg",
     emoji: "🌧️",
     description: "Performances d'essuyage optimales. Longueur : 550 mm.",
     disponibilite: true
